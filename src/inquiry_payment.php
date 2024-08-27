@@ -19,7 +19,7 @@ $pKeyId = $_ENV['PRIVATE_KEY']; // private key
 // url path values
 $baseUrl = 'https://sandbox.partner.api.bri.co.id'; //base url
 
-$partnerId = 'feedloop'; //partner id
+$partnerId = '456077'; //partner id
 $channelId = '12345'; // channel id
 
 $getAccessToken = new GetAccessToken();

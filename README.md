@@ -1,20 +1,19 @@
-# Transfer Credit
+# Template QRIS MPM Dynamic
 
-This is a simple template for Transfer Credit SNAP BI using PHP.
+This is a simple template for QRIS MPM Dynamic SNAP BI using PHP.
 
 module:
-- [Interbank Transfer](https://developers.bri.co.id/en/snap-bi/api-account-inquiry-external-interbank-transfer#Transfer)
-- [Intrabank Transfer](https://developers.bri.co.id/en/snap-bi/api-account-inquiry-internal-intrabank-transfer-v11)
-- [Transaction Status Inquiry](https://developers.bri.co.id/en/snap-bi/api-transaction-status-inquiry)
+- [Get Token](https://developers.bri.co.id/en/snap-bi/api-account-inquiry-external-interbank-transfer#Transfer)
+- [Generate QR](https://developers.bri.co.id/en/snap-bi/api-account-inquiry-internal-intrabank-transfer-v11)
+- [Inquiry Payment](https://developers.bri.co.id/en/snap-bi/api-transaction-status-inquiry)
 
 ## List of Content
 - [Instalasi](#instalasi)
   - [Prerequisites](#prerequisites)
   - [How to Setup Project](#how-to-setup-project)
-  - [Interbank Transfer Inquiry](#interbank-transfer-inquiry)
-  - [Interbank Transfer Transfer](#interbank-transfer-transfer)
-  - [Intrabank Transfer Inquiry](#intrabank-transfer-inquiry)
-  - [Transaction Status Inquiry](#transaction-status-inquiry)
+  - [Get Token](#interbank-transfer-inquiry)
+  - [Generate QR](#interbank-transfer-transfer)
+  - [Inquiry Payment](#intrabank-transfer-inquiry)
 - [How to get CONSUMER_KEY and CONSUMER_SECRET](#how-to-get-consumer_key-and-consumer_secret)
 - [How to get Private Key](#how-to-get-private-key)
 - [.ENV Example](#env-example)
@@ -30,75 +29,36 @@ module:
 ### How to Setup Project
 
 ```bash
-1. run command `cd template-transfer-credit` to change directory
+1. run command `cd briapi-template-qris-mpm-dynamic-php` to change directory
 2. copy .env file by typing 'cp .env.example .env' in the terminal
 3. fill the .env file with the required values
 4. run composer install to install all dependencies
 ```
 
-### Interbank Transfer Inquiry
+### Get Token
 ```bash
-1. fill partnerId and channelId
-2. fill beneficiaryAccountCode example 002
-3. fill beneficiaryAccountNo example 888801000157508
-4. run command `php src/interbank_transfer_inquiry.php serve`
+1. run command `php src/get_token.php serve`
 ```
 
-### Interbank Transfer Transfer
+### Generate QR
 ```bash
-1. fill partnerId and channelId
-2. fill partnerReferenceNo is Transaction identification on service provider system example 2020102900000000000001
-3. fill beneficiaryAccountName example Dummy
-4. fill beneficiaryAccountNo example 888801000187508
-5. fill beneficiaryBankCode example 002
-6. fill sourceAccountNo example 988901000187608
-7. fill transactionDate by default this template give you utils that can generate date
-8. fill beneficiaryAddress example palembang
-9. fill beneficiaryBankName example Bank BRI
-10. fill beneficiaryEmail example yories.yolanda@work.bri.co.id
-11. fill customerReference example 10052023
-12. fill value example 1000000.00
-13. fill currency example IDR
-14. fill deviceId example 12345
-15. fill channel example mobilephone
-16. run command `php src/interbank_transfer_inquiry.php serve`
+1. fill variable $partnerId, eg: '456077'
+2. fill variable $channelId, eg: '12345'
+3. fill variable $partnerReferenceNo, eg: '12345678901213'
+4. fill variable $value, eg: '123456.00'
+5. fill variable $currency, eg: 'IDR'
+6. fill variable $merchantId, eg: '000001019000014'
+7. fill variable $terminalId, eg: '10071096'
+8. run command `php src/generate_qr.php serve`
 ```
 
-### Intrabank Transfer Inquiry
+### Inquiry Payment
 ```bash
-1. fill partnerId and channelId
-2. fill beneficiaryAccountCode example 002
-3. fill beneficiaryAccountNo example 888801000157508
-4. run command `php src/intrabank_transfer_inquiry.php serve`
-```
-
-### Intrabank Transfer Transfer
-```bash
-1. fill partnerId and channelId
-2. fill beneficiaryAccountNo is Transaction identification on service provider system example 2020102900000000000001
-3. fill deviceId example '12345679237'
-4. fill channel example mobilephone
-5. fill partnerReferenceNo example 2021112500000000000001
-6. fill sourceAccountNo example 888801000157610
-7. fill feeType example BEN
-8. fill remark example remark test
-9. fill customerReference example 10052031
-10. fill transactionDate by default this template give you utils that can generate date
-11. fill value example 1000000.00
-12. fill currency example IDR
-13. run command `php src/intrabank_transfer_transfer.php serve`
-```
-
-### Transaction Status Inquiry
-```bash
-1. fill partnerId and channelId
-2. fill beneficiaryAccountNo example 888801000157508
-3. fill deviceId
-4. fill channel
-5. fill originalPartnerReferenceNo example 10052031
-6. fill serviceCode example 17
-7. fill transactionDate by default this template give you utils that can generate date example 2021-11-30T10:30:24+07:00
-8. run command `php src/transaction_status_inquiry.php serve`
+1. fill variable $partnerId, eg: '456077'
+2. fill variable $channelId, eg: '12345'
+3. fill variable $originalReferenceNo, Transaction identification number in the service provider's system	, eg: '1234567890110'
+4. fill variable $serviceCode, Transaction type indicator (service code of the original request transaction), only have length 2, eg: '17'
+5. fill variable $terminalId, Details of the contents of the additionalInfo object are in the table below	, eg: '100492'
 ```
 
 ## How to get CONSUMER_KEY and CONSUMER_SECRET
@@ -106,6 +66,7 @@ module:
 2. Click menu  My Apps
 3. select app
 4. copy Consumer Key and Consumer Secret
+![alt text](assets/image.png)
 
 ## How to get Private Key
 1. Go to https://developers.bri.co.id/en then login
@@ -114,6 +75,7 @@ module:
 4. Click Add Snap Key
 5. Generate RSA key with https://cryptotools.net/rsagen (recomended)
 6. Save your private key and fill your public key in Snap key then save
+![alt text](assets/image-1.png)
 
 ## .ENV Example
 ```bash

@@ -19,8 +19,8 @@ $pKeyId = $_ENV['PRIVATE_KEY']; // private key
 // url path values
 $baseUrl = 'https://sandbox.partner.api.bri.co.id'; //base url
 
-$partnerId = '456077'; //partner id
-$channelId = '12345'; // channel id
+$partnerId = ''; //partner id
+$channelId = ''; // channel id
 
 $getAccessToken = new GetAccessToken();
 
@@ -32,13 +32,26 @@ $getAccessToken = new GetAccessToken();
 
 $generateQR = new QrisMPMDynamic();
 
+$originalReferenceNo = '';
+$serviceCode = '';
+$terminalId = '';
+
+$body = [
+  'originalReferenceNo' => $originalReferenceNo,
+  'serviceCode' => $serviceCode,
+  'additionalInfo' => (object) [
+    'terminalId' => $terminalId
+  ]
+];
+
 $response = $generateQR->inquiryPayment(
   $clientSecret,
   $partnerId,
   $baseUrl,
   $accessToken,
   $channelId,
-  $timestamp
+  $timestamp,
+  $body
 );
 
 echo $response;

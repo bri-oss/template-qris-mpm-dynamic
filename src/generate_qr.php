@@ -8,6 +8,7 @@ require __DIR__ . '/../../briapi-sdk/autoload.php';
 use BRI\QrisMPMDynamic\QrisMPMDynamic;
 use BRI\TransferCredit\InterbankTransfer;
 use BRI\Util\GetAccessToken;
+use BRI\Util\VarNumber;
 
 $interbankTransfer = new InterbankTransfer();
 
@@ -19,8 +20,8 @@ $pKeyId = $_ENV['PRIVATE_KEY']; // private key
 // url path values
 $baseUrl = 'https://sandbox.partner.api.bri.co.id'; //base url
 
-$partnerId = ''; //partner id
-$channelId = ''; // channel id
+$partnerId = '456077'; //partner id
+$channelId = '12345'; // channel id
 $getAccessToken = new GetAccessToken();
 
 [$accessToken, $timestamp] = $getAccessToken->get(
@@ -31,11 +32,11 @@ $getAccessToken = new GetAccessToken();
 
 $generateQR = new QrisMPMDynamic();
 
-$partnerReferenceNo = '';
-$value = '';
-$currency = '';
-$merchantId = '';
-$terminalId = '';
+$partnerReferenceNo = (string) (new VarNumber())->generateVar(14);
+$value = '123456.00';
+$currency = 'IDR';
+$merchantId = '000001019000014';
+$terminalId = '10071096';
 
 $body = [
   'partnerReferenceNo' => $partnerReferenceNo,

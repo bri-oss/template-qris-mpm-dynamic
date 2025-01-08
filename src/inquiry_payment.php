@@ -1,58 +1,55 @@
 <?php
-require __DIR__ . '/../vendor/autoload.php';
+require 'utils.php';
 
-Dotenv\Dotenv::createUnsafeImmutable(__DIR__ . '/..' . '')->load();
-
-require __DIR__ . '/../../briapi-sdk/autoload.php';
-
-use BRI\QrisMPMDynamic\QrisMPMDynamic;
-use BRI\TransferCredit\InterbankTransfer;
-use BRI\Util\GetAccessToken;
 use BRI\Util\VarNumber;
-
-$interbankTransfer = new InterbankTransfer();
-
-// env values
-$clientId = $_ENV['CONSUMER_KEY']; // customer key
-$clientSecret = $_ENV['CONSUMER_SECRET']; // customer secret
-$pKeyId = $_ENV['PRIVATE_KEY']; // private key
 
 // url path values
 $baseUrl = 'https://sandbox.partner.api.bri.co.id'; //base url
 
-$partnerId = '456077'; //partner id
-$channelId = '12345'; // channel id
+try {
+  list($clientId, $clientSecret, $privateKey) = getCredentials();
 
-$getAccessToken = new GetAccessToken();
+  list($accessToken, $timestamp) = getAccessToken(
+    $clientId,
+    $privateKey,
+    $baseUrl
+  );
 
-[$accessToken, $timestamp] = $getAccessToken->get(
-  $clientId,
-  $pKeyId,
-  $baseUrl
-);
+  $partnerId = ''; //partner id
+  $channelId = ''; // channel id
+  $originalReferenceNo = (string) (new VarNumber())->generateVar(13);
+  $serviceCode = '';
+  $terminalId = '';
 
-$generateQR = new QrisMPMDynamic();
-
-$originalReferenceNo = (string) (new VarNumber())->generateVar(13);
-$serviceCode = '17';
-$terminalId = '100492';
-
-$body = [
-  'originalReferenceNo' => $originalReferenceNo,
-  'serviceCode' => $serviceCode,
-  'additionalInfo' => (object) [
+  $validateInputs = sanitizeInput([
+    'partnerId' => $partnerId,
+    'channelId' => $channelId,
+    'originalReferenceNo' => $originalReferenceNo,
+    'serviceCode' => $serviceCode,
     'terminalId' => $terminalId
-  ]
-];
+  ]);
 
-$response = $generateQR->inquiryPayment(
-  $clientSecret,
-  $partnerId,
-  $baseUrl,
-  $accessToken,
-  $channelId,
-  $timestamp,
-  $body
-);
+  $body = [
+    'originalReferenceNo' => $validateInputs['originalReferenceNo'],
+    'serviceCode' => $validateInputs['serviceCode'],
+    'additionalInfo' => (object) [
+      'terminalId' => $validateInputs['terminalId']
+    ]
+  ];
 
-echo $response;
+  $response = fetchInquiryPayment(
+    $clientSecret,
+    $partnerId,
+    $baseUrl,
+    $accessToken,
+    $channelId,
+    $timestamp,
+    $body
+  );
+
+  echo $response;
+
+} catch (Exception $e) {
+  error_log('Error: ' . $e->getMessage());
+  exit(1);
+}

@@ -1,61 +1,62 @@
 <?php
-require __DIR__ . '/../vendor/autoload.php';
 
-Dotenv\Dotenv::createUnsafeImmutable(__DIR__ . '/..' . '')->load();
+require 'utils.php';
 
-require __DIR__ . '/../../briapi-sdk/autoload.php';
 
-use BRI\QrisMPMDynamic\QrisMPMDynamic;
-use BRI\TransferCredit\InterbankTransfer;
-use BRI\Util\GetAccessToken;
 use BRI\Util\VarNumber;
-
-$interbankTransfer = new InterbankTransfer();
-
-// env values
-$clientId = $_ENV['CONSUMER_KEY']; // customer key
-$clientSecret = $_ENV['CONSUMER_SECRET']; // customer secret
-$pKeyId = $_ENV['PRIVATE_KEY']; // private key
 
 // url path values
 $baseUrl = 'https://sandbox.partner.api.bri.co.id'; //base url
 
-$partnerId = '456077'; //partner id
-$channelId = '12345'; // channel id
-$getAccessToken = new GetAccessToken();
+try {
+  list($clientId, $clientSecret, $privateKey) = getCredentials();
 
-[$accessToken, $timestamp] = $getAccessToken->get(
-  $clientId,
-  $pKeyId,
-  $baseUrl
-);
+  list($accessToken, $timestamp) = getAccessToken(
+    $clientId,
+    $privateKey,
+    $baseUrl
+  );
 
-$generateQR = new QrisMPMDynamic();
+  $partnerId = ''; //partner id
+  $channelId = ''; // channel id
+  $partnerReferenceNo = (string) (new VarNumber())->generateVar(14);
+  $value = '';
+  $currency = '';
+  $merchantId = '';
+  $terminalId = '';
 
-$partnerReferenceNo = (string) (new VarNumber())->generateVar(14);
-$value = '123456.00';
-$currency = 'IDR';
-$merchantId = '000001019000014';
-$terminalId = '10071096';
-
-$body = [
-  'partnerReferenceNo' => $partnerReferenceNo,
-  'amount' => (object) [
+  $validateInputs = sanitizeInput([
+    'partnerId' => $partnerId,
+    'channelId' => $channelId,
+    'partnerReferenceNo' => $partnerReferenceNo,
     'value' => $value,
     'currency' => $currency,
-  ],
-  'merchantId' => $merchantId,
-  'terminalId' => $terminalId
-];
+    'merchantId' => $merchantId,
+    'terminalId' => $terminalId
+  ]);
 
-$response = $generateQR->generateQR(
-  $clientSecret,
-  $partnerId,
-  $baseUrl,
-  $accessToken,
-  $channelId,
-  $timestamp,
-  $body
-);
+  $body = [
+    'partnerReferenceNo' => $validateInputs['partnerReferenceNo'],
+    'amount' => (object) [
+      'value' => $validateInputs['value'],
+      'currency' => $validateInputs['currency'],
+    ],
+    'merchantId' => $validateInputs['merchantId'],
+    'terminalId' => $validateInputs['terminalId']
+  ];
 
-echo $response;
+  $response = fetchGenerateQR(
+    $clientSecret,
+    $partnerId,
+    $baseUrl,
+    $accessToken,
+    $validateInputs['channelId'],
+    $timestamp,
+    $body
+  );
+
+  echo $response;
+} catch (Exception $e) {
+  error_log('Error: ' . $e->getMessage());
+  exit(1);
+}

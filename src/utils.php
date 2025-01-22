@@ -8,6 +8,8 @@ require __DIR__ . '/../../briapi-sdk/autoload.php';
 
 use BRI\Util\GetAccessToken;
 use BRI\QrisMPMDynamic\QrisMPMDynamic;
+use BRI\Util\ExecuteCurlRequest;
+use BRI\Util\PrepareRequest;
 
 function getCredentials(): array {
   $clientId = $_ENV['CONSUMER_KEY'] ?? null; // customer key
@@ -58,7 +60,13 @@ function fetchGenerateQR(
   string $timestamp,
   array $body
 ): string {
-  $generateQR = new QrisMPMDynamic();
+  $executeCurlRequest = new ExecuteCurlRequest();
+  $prepareRequest = new PrepareRequest();
+
+  $generateQR = new QrisMPMDynamic(
+    $executeCurlRequest,
+    $prepareRequest
+  );
 
   $response = $generateQR->generateQR(
     $clientSecret,
@@ -82,7 +90,13 @@ function fetchInquiryPayment(
   string $timestamp,
   array $body
 ): string {
-  $generateQR = new QrisMPMDynamic();
+  $executeCurlRequest = new ExecuteCurlRequest();
+  $prepareRequest = new PrepareRequest();
+
+  $generateQR = new QrisMPMDynamic(
+    $executeCurlRequest,
+    $prepareRequest
+  );
 
   $response = $generateQR->inquiryPayment(
     $clientSecret,

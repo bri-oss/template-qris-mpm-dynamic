@@ -57,7 +57,7 @@ try {
     $body
   );
 
-  echo htmlspecialchars($response, ENT_QUOTES, 'UTF-8');
+  echo $response;
 } catch (InvalidArgumentException $e) {
   // Return a generic error message to the client
   http_response_code(400); // Bad Request

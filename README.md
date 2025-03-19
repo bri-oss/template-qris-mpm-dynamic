@@ -54,11 +54,11 @@ module:
 
 ### Inquiry Payment
 ```bash
-1. fill variable $partnerId, eg: '456077'
-2. fill variable $channelId, eg: '12345'
-3. fill variable $originalReferenceNo, Transaction identification number in the service provider's system	, eg: '1234567890110'
+1. fill variable $partnerId, eg: '88891820'
+2. fill variable $channelId, eg: '95221'
+3. fill variable $originalReferenceNo, Transaction identification number in the service provider's system	, eg: '753248251996'
 4. fill variable $serviceCode, Transaction type indicator (service code of the original request transaction), only have length 2, eg: '17'
-5. fill variable $terminalId, Details of the contents of the additionalInfo object are in the table below	, eg: '100492'
+5. fill variable $terminalId, Details of the contents of the additionalInfo object are in the table below	, eg: '10080032'
 ```
 
 ## How to get CONSUMER_KEY and CONSUMER_SECRET

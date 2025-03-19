@@ -20,7 +20,7 @@ try {
 
   $partnerId = ''; //partner id
   $channelId = ''; // channel id
-  $originalReferenceNo = (string) (new VarNumber())->generateVar(13);
+  $originalReferenceNo = ''; //(string) (new VarNumber())->generateVar(13);
   $serviceCode = '';
   $terminalId = '';
 
@@ -33,10 +33,10 @@ try {
   ]);
 
   $body = [
-    'originalReferenceNo' => $validateInputs['originalReferenceNo'],
-    'serviceCode' => $validateInputs['serviceCode'],
+    'originalReferenceNo' => $originalReferenceNo,
+    'serviceCode' => $serviceCode,
     'additionalInfo' => (object) [
-      'terminalId' => $validateInputs['terminalId']
+      'terminalId' => $terminalId
     ]
   ];
 
